@@ -43,11 +43,11 @@ class Arista:
         """
         Representación en string de la arista.
         
-        tipo_de_dato:  string.
-        retorna:       '->' si es dirigida, '--' en otro caso.
+        -tipo_de_dato:  string.
+        -retorna:       '->' si es dirigida, '--' en otro caso.
         """
         direccion = "->" if self.dirigida else "--"
         return f"{self.origen.obtener_valor()} {direccion} {self.destino.obtener_valor()}"
     
-    
+
     
