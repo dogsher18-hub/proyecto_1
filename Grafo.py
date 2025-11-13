@@ -1,8 +1,8 @@
 import Arista as ari
 import Nodo as nod
+from collections import deque
 import random  
 import math
-# import pygame
 
 
 
@@ -324,3 +324,82 @@ class Grafo:
                     Pv=1-((self.grado_nodo(exisN.obtener_valor()))/costomax)
                     if random.random() < Pv:
                         self.agregar_arista(exisN.obtener_valor(),valnodo)
+
+    #comienza proyecto 2
+    def BFS(self, inicio):
+        """
+        Búsqueda a lo ancho (Breadth-First Search)
+        Construye el árbol BFS desde el nodo inicial.
+        """
+        arbolBFS = Grafo(dirigido=self.dirigido)
+        nodo_inicio = self.obtener_nodo(inicio)
+        if not nodo_inicio:
+            return arbolBFS
+        
+        visitados = set()
+        cola = deque()
+        
+        cola.append(nodo_inicio)
+        visitados.add(nodo_inicio.obtener_valor())
+        
+        while cola:
+            nodo_actual = cola.popleft()
+            for vecino in nodo_actual.obtener_vecinos():
+                valor_vecino = vecino.obtener_valor()
+                if valor_vecino not in visitados:
+                    visitados.add(valor_vecino)
+                    cola.append(vecino)
+                    arbolBFS.agregar_arista(nodo_actual.obtener_valor(), valor_vecino)
+        return arbolBFS
+
+    def DfsR(self, inicio):
+        """
+        Búsqueda en profundidad (DFS) recursiva.
+        """
+        nodo_inicio = self.obtener_nodo(inicio)
+        if not nodo_inicio:
+            return Grafo()
+        
+        visitados = set()
+        arbol_dfsr = Grafo(dirigido=self.dirigido)
+        
+        def dfs(nodo):
+            valor = nodo.obtener_valor()
+            visitados.add(valor)
+            for vecino in nodo.obtener_vecinos():
+                if vecino.obtener_valor() not in visitados:
+                    arbol_dfsr.agregar_arista(valor, vecino.obtener_valor())
+                    dfs(vecino)
+        
+        dfs(nodo_inicio)
+        return arbol_dfsr
+
+
+    def DfsIte(self, inicio):
+        """
+        Búsqueda en profundidad iterativa (DFS).
+        Construye el árbol DFS desde el nodo inicial.
+        """
+        nodo_inicio = self.obtener_nodo(inicio)
+        if not nodo_inicio:
+            return Grafo()
+        
+        visitados = set()
+        pila = [nodo_inicio]
+        arbol_dfsi = Grafo(dirigido=self.dirigido)
+        
+        while pila:
+            nodo_actual = pila.pop()
+            valor_actual = nodo_actual.obtener_valor()
+            
+            if valor_actual not in visitados:
+                visitados.add(valor_actual)
+                
+                for vecino in reversed(nodo_actual.obtener_vecinos()):
+                    valor_vecino = vecino.obtener_valor()
+                    if valor_vecino not in visitados:
+                        arbol_dfsi.agregar_arista(valor_actual, valor_vecino)
+                        pila.append(vecino)
+        
+        return arbol_dfsi
+
